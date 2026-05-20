@@ -1,0 +1,8 @@
+*.o
+*.out
+__pycache__/
+*.pyc
+venv/
+.DS_store
+pcb_snapshot.json
+simulation_report.json

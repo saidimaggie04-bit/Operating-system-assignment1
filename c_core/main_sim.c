@@ -1,43 +1,46 @@
 #include "include/eduos.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
-int main(void){
-srand(time(NULL);
-printf("===EduOS core simulator starting ===\n\n");
+pid_t edu_fork(PCB *parent);
+void edu_exec(pid_t pid, char *prog_name);
+int edu_wait(pid_t parent_pid);
+void edu_exit(pid_t pid, int exit_code);
+void edu_ps();
+void write_pcb_snapshot();
 
-//create init process (PID)
-PCB init ={0};
-init.pid = 1;
-strcpy(init.name,'init");
-init.state = RUNNING;
-init.priority = 0;
-init.burst_time = 100;
-init.remaining_time = 100;
-init.arrival_time = 0;
-init.creation_time = time(NULL);
-
-process_table[0] = init;
-process_count = 1;
-next_pid = 2;
-
-edu_ps();
-//test fork + exec
-pid_t child1 = edu_fork(&process_table[0]);
-edu_exec(child1,"ls");
-
-pid_tchild2 = edu_fork(&process_table[0]);
-edu_exec(child2,"firefox");
-
-
-edu_ps();
-
-//test exit
-edu_exit(child1,0);
-edu_ps();
-
-edu_exit(child2,0);
-edu_ps();
-printf("simulator finished.\n");
-return 0;
-
+int main() {
+    printf("=== EduOS Simulator Starting ===\n\n");
+    PCB parent;
+    parent.pid = 0;
+    strncpy(parent.name, "init", 63);
+    parent.state = RUNNING;
+    parent.priority = 0;
+    parent.burst_time = 20;
+    parent.arrival_time = 0;
+    parent.remaining_time = 20;
+    parent.memory_req_kb = 512;
+    parent.thread_count = 1;
+    parent.owner_id = 1;
+    parent.creation_time = time(NULL);
+    pid_t p1 = edu_fork(&parent);
+    pid_t p2 = edu_fork(&parent);
+    pid_t p3 = edu_fork(&parent);
+    edu_exec(p1, "calculator");
+    edu_exec(p2, "text_editor");
+    edu_exec(p3, "file_manager");
+    printf("\n--- Process Table ---\n");
+    edu_ps();
+    write_pcb_snapshot();
+    printf("PCB snapshot saved to pcb_snapshot.json\n");
+    edu_exit(p1, 0);
+    edu_exit(p2, 0);
+    edu_exit(p3, 0);
+    edu_wait(parent.pid);
+    printf("\n--- Final Process Table ---\n");
+    edu_ps();
+    printf("\n=== EduOS Simulation Complete ===\n");
+    return 0;
 }
-

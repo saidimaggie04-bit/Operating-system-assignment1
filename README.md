@@ -4,8 +4,8 @@
 **Module Code:** 351 CS 2104
 **Module Name:** Operating Systems
 **Semester:** III
-**Student Name:** [Your Full Name]
-**Registration Number:** [Your Reg Number]
+**Student Name:** Maggie Saidi
+**Registration Number:** 25311351013
 
 ## Prerequisites
 - GCC compiler with pthread support
